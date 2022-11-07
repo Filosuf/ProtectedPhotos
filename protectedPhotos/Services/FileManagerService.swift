@@ -7,36 +7,37 @@
 
 import Foundation
 
-enum FileType: String {
-    case folder = "NSFileTypeDirectory"
-    case file = "NSFileTypeRegular"
-}
 
-struct ContentInfo {
+struct Content {
     let url: URL
     let lastPath: String
     let fileType: FileType
+    let data: Data?
+
+    enum FileType: String {
+        case folder = "NSFileTypeDirectory"
+        case file = "NSFileTypeRegular"
+    }
 }
 
 protocol FileManagerServiceProtocol {
     var documentsUrl: URL {get}
 
-    func contentsOfDirectory(url: URL?) -> Result<[ContentInfo], Error>
+    func contentsOfDirectory(url: URL?) -> Result<[Content], Error>
     func createDirectory(url: URL?)
     func createFile(file: Data, url: URL)
     func removeContent(url: URL)
+    func getData(with url: URL) -> Data?
 }
 
 
 final class FileManagerService: FileManagerServiceProtocol {
 
     private let fileManager = FileManager.default
-//    private var documentsUrl: URL?
-//    private var currentDirectory: URL?
     var documentsUrl: URL { getDocumentsUrl() }
 
-    func contentsOfDirectory(url: URL?) -> Result<[ContentInfo], Error> {
-        var result: [ContentInfo] = []
+    func contentsOfDirectory(url: URL?) -> Result<[Content], Error> {
+        var result: [Content] = []
         let currentUrl = url ?? getDocumentsUrl()
         do {
             let contents = try fileManager.contentsOfDirectory(at: currentUrl, includingPropertiesForKeys: nil, options: .skipsHiddenFiles)
@@ -45,8 +46,9 @@ final class FileManagerService: FileManagerServiceProtocol {
                     let attributes = try fileManager.attributesOfItem(atPath: content.path)
                     let lastPath = content.lastPathComponent
                     if let fileTypeString = attributes[FileAttributeKey.type] as? String {
-                        let fileType: FileType = (fileTypeString == FileType.folder.rawValue) ? .folder : .file
-                        result.append(ContentInfo(url: content, lastPath: lastPath, fileType: fileType))
+                        let fileType: Content.FileType = (fileTypeString == Content.FileType.folder.rawValue) ? .folder : .file
+                        let data = try? Data(contentsOf: content)
+                        result.append(Content(url: content, lastPath: lastPath, fileType: fileType, data: data))
                     }
                 } catch let error {
                     return .failure(error)
@@ -77,6 +79,18 @@ final class FileManagerService: FileManagerServiceProtocol {
     func removeContent(url: URL) {
         try? fileManager.removeItem(at: url)
         print("Remove content")
+    }
+
+    func getData(with url: URL) -> Data? {
+        var savedData: Data?
+        do {
+         // Get the saved data
+            savedData = try Data(contentsOf: url)
+        } catch {
+         // Catch any errors
+            print("Unable to read the file")
+        }
+        return savedData
     }
 
     private func getDocumentsUrl() -> URL {

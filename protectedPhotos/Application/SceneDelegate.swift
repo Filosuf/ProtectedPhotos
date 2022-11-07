@@ -16,9 +16,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
         window = UIWindow(windowScene: windowScene)
+        let factory = FactoryVC(fileManagerService: FileManagerService())
         let fileManagerService = FileManagerService()
-        let coordinator = ListFlowCoordinator(fileManagerService: fileManagerService)
-        window?.rootViewController = coordinator.startApplication()
+        let passwordService = PasswordService()
+        let coordinator: MainCoordinator = MainCoordinatorImp(fileManagerService: fileManagerService, passwordService: passwordService)
+        let vc = factory.getTabBarController()
+        window?.rootViewController = vc
         window?.makeKeyAndVisible()
         window?.overrideUserInterfaceStyle = .light
     }
