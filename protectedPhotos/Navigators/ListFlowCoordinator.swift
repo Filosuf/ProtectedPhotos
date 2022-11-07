@@ -11,16 +11,13 @@ import UIKit
 final class ListFlowCoordinator {
 
     private let fileManagerService: FileManagerServiceProtocol
-    private lazy var navCon: UINavigationController = UINavigationController(rootViewController: ListViewController(coordinator: self, fileManagerService: fileManagerService, startUrl: fileManagerService.documentsUrl))
+    private let navCon: UINavigationController
+    private let passwordService: PasswordServiceProtocol = PasswordService()
 
     //MARK: - Initialiser
-    init(fileManagerService: FileManagerServiceProtocol) {
+    init(navCon: UINavigationController, fileManagerService: FileManagerServiceProtocol) {
+        self.navCon = navCon
         self.fileManagerService = fileManagerService
-    }
-
-    func startApplication() -> UINavigationController {
-        navCon.tabBarItem = UITabBarItem()
-        return navCon
     }
 
     func push(startUrl: URL) {
@@ -28,7 +25,26 @@ final class ListFlowCoordinator {
         navCon.pushViewController(vc, animated: true)
     }
 
+    func showImage(with image: UIImage) {
+        let vc = ImageViewController(image: image)
+        navCon.pushViewController(vc, animated: true)
+    }
+
     func pop() {
         navCon.popViewController(animated: true)
+    }
+
+    // проверка авторизован ли юзер
+    // показать либо экран авторизации, либо новостную ленту
+    func passwordVCPresent() {
+        if passwordService.isSet() {
+            let passwordVC = PasswordViewController(state: .enterPassword, passwordService: PasswordService())
+            passwordVC.modalPresentationStyle = .fullScreen
+            navCon.present(passwordVC, animated: true)
+        } else {
+            let passwordVC = PasswordViewController(state: .createPassword, passwordService: PasswordService())
+            passwordVC.modalPresentationStyle = .fullScreen
+            navCon.present(passwordVC, animated: true)
+        }
     }
 }

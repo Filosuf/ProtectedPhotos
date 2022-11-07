@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7C7676F128EAF86900FE544F /* FactoryVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C7676F028EAF86900FE544F /* FactoryVC.swift */; };
 		7CA5915128C68B70009344AE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA5915028C68B70009344AE /* AppDelegate.swift */; };
 		7CA5915328C68B70009344AE /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA5915228C68B70009344AE /* SceneDelegate.swift */; };
 		7CA5915528C68B70009344AE /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA5915428C68B70009344AE /* ViewController.swift */; };
@@ -16,9 +17,19 @@
 		7CA5916928C68F96009344AE /* ListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA5916828C68F95009344AE /* ListView.swift */; };
 		7CA5916C28C73EEE009344AE /* FileManagerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA5916B28C73EEE009344AE /* FileManagerService.swift */; };
 		7CA5917428D66186009344AE /* ListFlowCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA5917328D66185009344AE /* ListFlowCoordinator.swift */; };
+		7CA591B628E3207E009344AE /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA591B528E3207C009344AE /* SettingsViewController.swift */; };
+		7CA591B828E3213A009344AE /* MainCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA591B728E3213A009344AE /* MainCoordinator.swift */; };
+		7CA591BC28E48B45009344AE /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA591BB28E48B45009344AE /* SettingsView.swift */; };
+		7CA591BE28E59948009344AE /* ImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA591BD28E59948009344AE /* ImageViewController.swift */; };
+		7CA591C028E5ADC6009344AE /* SettingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA591BF28E5ADC6009344AE /* SettingTableViewCell.swift */; };
+		7CA591C228E5E58F009344AE /* PasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA591C128E5E58F009344AE /* PasswordViewController.swift */; };
+		7CA591C728E6C548009344AE /* SettingsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA591C628E6C548009344AE /* SettingsStore.swift */; };
+		7CA591C928E71B53009344AE /* PasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA591C828E71B53009344AE /* PasswordView.swift */; };
+		7CA591CB28E732EE009344AE /* PasswordService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA591CA28E732EE009344AE /* PasswordService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		7C7676F028EAF86900FE544F /* FactoryVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FactoryVC.swift; sourceTree = "<group>"; };
 		7CA5914D28C68B70009344AE /* protectedPhotos.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = protectedPhotos.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7CA5915028C68B70009344AE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7CA5915228C68B70009344AE /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -30,6 +41,15 @@
 		7CA5916828C68F95009344AE /* ListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListView.swift; sourceTree = "<group>"; };
 		7CA5916B28C73EEE009344AE /* FileManagerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileManagerService.swift; sourceTree = "<group>"; };
 		7CA5917328D66185009344AE /* ListFlowCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListFlowCoordinator.swift; sourceTree = "<group>"; };
+		7CA591B528E3207C009344AE /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
+		7CA591B728E3213A009344AE /* MainCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCoordinator.swift; sourceTree = "<group>"; };
+		7CA591BB28E48B45009344AE /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		7CA591BD28E59948009344AE /* ImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageViewController.swift; sourceTree = "<group>"; };
+		7CA591BF28E5ADC6009344AE /* SettingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingTableViewCell.swift; sourceTree = "<group>"; };
+		7CA591C128E5E58F009344AE /* PasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordViewController.swift; sourceTree = "<group>"; };
+		7CA591C628E6C548009344AE /* SettingsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsStore.swift; sourceTree = "<group>"; };
+		7CA591C828E71B53009344AE /* PasswordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordView.swift; sourceTree = "<group>"; };
+		7CA591CA28E732EE009344AE /* PasswordService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,12 +84,19 @@
 			children = (
 				7CA5917228D66134009344AE /* Presentation */,
 				7CA5917128D660F8009344AE /* Navigators */,
+				7C7676F028EAF86900FE544F /* FactoryVC.swift */,
 				7CA5915428C68B70009344AE /* ViewController.swift */,
+				7CA591C128E5E58F009344AE /* PasswordViewController.swift */,
 				7CA5916628C68F35009344AE /* ListViewController.swift */,
+				7CA591BF28E5ADC6009344AE /* SettingTableViewCell.swift */,
+				7CA591BD28E59948009344AE /* ImageViewController.swift */,
+				7CA591B528E3207C009344AE /* SettingsViewController.swift */,
 				7CA5916A28C73EC9009344AE /* Services */,
 				7CA5916528C68BEE009344AE /* Application */,
 				7CA5916428C68BA1009344AE /* Resources */,
 				7CA5916828C68F95009344AE /* ListView.swift */,
+				7CA591BB28E48B45009344AE /* SettingsView.swift */,
+				7CA591C828E71B53009344AE /* PasswordView.swift */,
 			);
 			path = protectedPhotos;
 			sourceTree = "<group>";
@@ -97,6 +124,8 @@
 			isa = PBXGroup;
 			children = (
 				7CA5916B28C73EEE009344AE /* FileManagerService.swift */,
+				7CA591CA28E732EE009344AE /* PasswordService.swift */,
+				7CA591C628E6C548009344AE /* SettingsStore.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -105,6 +134,7 @@
 			isa = PBXGroup;
 			children = (
 				7CA5917328D66185009344AE /* ListFlowCoordinator.swift */,
+				7CA591B728E3213A009344AE /* MainCoordinator.swift */,
 			);
 			path = Navigators;
 			sourceTree = "<group>";
@@ -189,10 +219,20 @@
 				7CA5915528C68B70009344AE /* ViewController.swift in Sources */,
 				7CA5915128C68B70009344AE /* AppDelegate.swift in Sources */,
 				7CA5916928C68F96009344AE /* ListView.swift in Sources */,
+				7CA591C228E5E58F009344AE /* PasswordViewController.swift in Sources */,
+				7C7676F128EAF86900FE544F /* FactoryVC.swift in Sources */,
+				7CA591CB28E732EE009344AE /* PasswordService.swift in Sources */,
 				7CA5916728C68F35009344AE /* ListViewController.swift in Sources */,
 				7CA5915328C68B70009344AE /* SceneDelegate.swift in Sources */,
 				7CA5917428D66186009344AE /* ListFlowCoordinator.swift in Sources */,
 				7CA5916C28C73EEE009344AE /* FileManagerService.swift in Sources */,
+				7CA591C028E5ADC6009344AE /* SettingTableViewCell.swift in Sources */,
+				7CA591B828E3213A009344AE /* MainCoordinator.swift in Sources */,
+				7CA591C928E71B53009344AE /* PasswordView.swift in Sources */,
+				7CA591C728E6C548009344AE /* SettingsStore.swift in Sources */,
+				7CA591B628E3207E009344AE /* SettingsViewController.swift in Sources */,
+				7CA591BE28E59948009344AE /* ImageViewController.swift in Sources */,
+				7CA591BC28E48B45009344AE /* SettingsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

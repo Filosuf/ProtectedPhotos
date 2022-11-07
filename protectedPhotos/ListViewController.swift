@@ -12,14 +12,18 @@ final class ListViewController: UIViewController {
     private lazy var listView = ListView()
     private let fileManagerService: FileManagerServiceProtocol
     private let coordinator: ListFlowCoordinator
-    private var contentsInfo = [ContentInfo]()
+    private var contents = [Content]()
     private let cuurentDirectoryUrl: URL
+    private var imageList = [UIImage]()
+    private let checkPassword: Bool
+    private var settingsValue: Settings { SettingsStore.shared.settings }
 
 // MARK: - Initialiser
-    init(coordinator: ListFlowCoordinator, fileManagerService: FileManagerServiceProtocol, startUrl: URL) {
+    init(coordinator: ListFlowCoordinator, fileManagerService: FileManagerServiceProtocol, startUrl: URL, checkPassword: Bool = false) {
         self.cuurentDirectoryUrl = startUrl
         self.coordinator = coordinator
         self.fileManagerService = fileManagerService
+        self.checkPassword = checkPassword
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -27,15 +31,22 @@ final class ListViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    // MARK: - LifeCicle
+    // MARK: - LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setNavBar()
         listView.setTable(delegate: self, dataSource: self)
         reloadTable()
         layout()
+        checkPass()
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        reloadTable()
+    }
+
+    // MARK: - Methods
     private func setNavBar() {
         // Additional bar button items
         let button1 = UIBarButtonItem(image: UIImage(systemName: "folder.badge.plus"), style: .plain, target: self, action: #selector(self.newFolder))
@@ -48,9 +59,9 @@ final class ListViewController: UIViewController {
     private func reloadTable() {
         let result = fileManagerService.contentsOfDirectory(url: cuurentDirectoryUrl)
         switch result {
-        case .success(var contentsInfo):
-            contentsInfo = listSort(contentsInfo)
-            self.contentsInfo = contentsInfo
+        case .success(var contents):
+            contents = listSort(contents)
+            self.contents = contents
             listView.reloadTable()
         case .failure(let error):
             print(error.localizedDescription)
@@ -73,14 +84,13 @@ final class ListViewController: UIViewController {
 
     @objc private func newPhoto() {
         print("Попытка добавить фото")
-        if UIImagePickerController.isSourceTypeAvailable(UIImagePickerController.SourceType.photoLibrary){
+        if UIImagePickerController.isSourceTypeAvailable(UIImagePickerController.SourceType.photoLibrary) {
             let imagePicker = UIImagePickerController()
             imagePicker.delegate = self
             imagePicker.sourceType = UIImagePickerController.SourceType.photoLibrary
             self.present(imagePicker, animated: true, completion: nil)
         }
-        else
-        {
+        else {
             let alert  = UIAlertController(title: "Warning", message: "You don't have permission to access gallery.", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
             self.present(alert, animated: true, completion: nil)
@@ -120,10 +130,10 @@ final class ListViewController: UIViewController {
         ])
     }
 
-    private func listSort(_ array: [ContentInfo]) -> [ContentInfo] {
+    private func listSort(_ array: [Content]) -> [Content] {
         //сортировка по имени, фото и папки сортируются отдельно, папки всегда наверху
-        var folders = [ContentInfo]()
-        var photos = [ContentInfo]()
+        var folders = [Content]()
+        var photos = [Content]()
         for item in array {
             if item.fileType == .folder {
                 folders.append(item)
@@ -131,32 +141,43 @@ final class ListViewController: UIViewController {
                 photos.append(item)
             }
         }
-        folders = folders.sorted(by: { $0.lastPath < $1.lastPath })
-        photos = photos.sorted(by: { $0.lastPath < $1.lastPath })
+        if settingsValue.sort {
+            folders = folders.sorted(by: { $0.lastPath < $1.lastPath })
+            photos = photos.sorted(by: { $0.lastPath < $1.lastPath })
+        } else {
+            folders = folders.sorted(by: { $0.lastPath > $1.lastPath })
+            photos = photos.sorted(by: { $0.lastPath > $1.lastPath })
+        }
         return folders + photos
+    }
+
+    private func checkPass() {
+        if checkPassword {
+            coordinator.passwordVCPresent()
+        }
     }
 }
 
 // MARK: - UITableViewDataSource
 extension ListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        contentsInfo.count
+        contents.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell()
-        let contentInfo = contentsInfo[indexPath.row]
+        let contentInfo = contents[indexPath.row]
         var content = cell.defaultContentConfiguration()
         content.text = "\(contentInfo.lastPath)"
         if contentInfo.fileType == .folder {
             content.image = UIImage(systemName: "folder")
             cell.accessoryType = .disclosureIndicator
         } else {
-//            if let image = imageArray {
-//                content.image = image
-//            } else {
+            if let imageData = contentInfo.data {
+                content.image = UIImage(data: imageData)
+            } else {
                 content.image = UIImage(systemName: "photo")
-//            }
+            }
         }
         content.imageProperties.maximumSize = CGSize(width: 60, height: 30)
         cell.contentConfiguration = content
@@ -167,36 +188,41 @@ extension ListViewController: UITableViewDataSource {
 // MARK: - UITableViewDelegate
 extension ListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let content = contentsInfo[indexPath.row]
+        tableView.deselectRow(at: indexPath, animated: true)
+        let content = contents[indexPath.row]
         if content.fileType == .folder {
             let folderUrl = content.url
             coordinator.push(startUrl: folderUrl)
+        } else {
+            if let data = content.data, let image = UIImage(data: data) {
+                coordinator.showImage(with: image)
+            }
         }
     }
 
     // Create a standard header that includes the returned text.
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-    //Для того чтобы заглавной была только первая буква, имя задаётся в настройках (шрифт, цвет, фон) заголовка
+        //Для того чтобы заглавной была только первая буква, имя задаётся в настройках (шрифт, цвет, фон) заголовка
         return "_"
     }
-
+    
     func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
 
-    // Создаём константу, именна через неё мы будем обращаться к свойствам и изменять их
-    let header = view as! UITableViewHeaderFooterView
+        let header = view as! UITableViewHeaderFooterView
+        
+        // Установить цвет текста в label
+        header.textLabel?.textColor = .black
 
-    // Установить цвет текста в label
-    header.textLabel?.textColor = .black
-
-    // Установить цвет фона для секции
-    header.tintColor = UIColor.white
-
-    // Установить название для заголовка
-    header.textLabel?.text = cuurentDirectoryUrl.lastPathComponent
-
-    // Установить шрифт и размер шрифта для label
-    header.textLabel?.font = UIFont.boldSystemFont(ofSize: 25)    }
-
+        // Установить цвет фона для секции
+        header.tintColor = UIColor.white
+        
+        // Установить название для заголовка
+        header.textLabel?.text = cuurentDirectoryUrl.lastPathComponent
+        
+        // Установить шрифт и/или размер шрифта для label
+        header.textLabel?.font = UIFont.boldSystemFont(ofSize: 25)
+    }
+    
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return true
     }
@@ -204,7 +230,7 @@ extension ListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if (editingStyle == .delete) {
             // handle delete (by removing the data from your array and updating the tableview)
-            let fileUrl = contentsInfo[indexPath.row].url
+            let fileUrl = contents[indexPath.row].url
             fileManagerService.removeContent(url: fileUrl)
             reloadTable()
         }
@@ -216,7 +242,7 @@ extension ListViewController: UIImagePickerControllerDelegate, UINavigationContr
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         
         guard let pickedImage = info[.originalImage] as? UIImage, let imageUrl = info[.imageURL] as? URL else { return }
-        
+
         var imageNewUrl = cuurentDirectoryUrl
         imageNewUrl.appendPathComponent(imageUrl.lastPathComponent)
         fileManagerService.createFile(file: pickedImage.pngData()!, url: imageNewUrl)
